@@ -1,0 +1,65 @@
+name: ddns-go
+
+on: 
+  push:
+    
+  schedule:
+    - cron: '0 0 * * 0'
+
+env:
+  NAME: ddns-go #镜像名称
+
+jobs:
+  cache:
+    runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.cache.outputs.cache-hit }}
+      TAG: ${{ env.TAG }}
+    steps:
+      - name: Get ddns-go TAG
+        run: |
+          echo "TAG=$(curl -s https://api.github.com/repos/jeessy2/ddns-go/releases/latest | jq -r .tag_name)" >> $GITHUB_ENV #向变量 TAG 写入 ddns-go 标签
+          touch ~/.cache
+          
+      - name: Cache
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache
+          key: ${{ env.TAG }}
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: cache
+    if: needs.cache.outputs.cache-hit != 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Add ddns-go
+        run: |
+          sed -i "3c 版本: ${{ needs.cache.outputs.TAG }}" README.md #向 README.md 第三行写入版本号
+          wget $(curl https://api.github.com/repos/jeessy2/ddns-go/releases/tags/${{ needs.cache.outputs.TAG }} | jq -r '.assets[].browser_download_url' | grep Linux_x86_64) #下载适用于 Linux_x86_64 架构的最新版 ddns-go
+          tar -xvzf *.tar.gz ddns-go
+          rm *.tar.gz
+
+      - name: Git
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "feat: bump ${{ env.NAME }} to ${{ needs.cache.outputs.TAG }}"
+          commit_author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: waterlemons2k
+          password: ${{ secrets.TOKEN }}
+
+      - name: Build and push Docker Image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: |
+            waterlemons2k/${{ env.NAME }}
+            waterlemons2k/${{ env.NAME }}:${{ needs.cache.outputs.TAG }}
