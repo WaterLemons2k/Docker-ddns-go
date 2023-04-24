@@ -18,6 +18,7 @@ jobs:
     with:
       run: |
         sed -i "3c 版本：${{ needs.cmp.outputs.version }}" README.md #向 README.md 第三行写入版本号
+        # https://unix.stackexchange.com/a/82610
         for i in 1 2 3; do wget $(curl https://api.github.com/repos/jeessy2/ddns-go/releases/tags/${{ needs.cmp.outputs.version }} | jq -r '.assets[].browser_download_url' | grep linux_x86_64) && break || echo "Retry $i" && sleep 1; done # 失败时重试 3 次
         tar -xvzf *.tar.gz ddns-go
         rm *.tar.gz
