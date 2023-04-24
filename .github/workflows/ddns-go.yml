@@ -1,0 +1,36 @@
+name: ddns-go
+
+on: 
+  push:
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  cmp:
+    uses: WaterLemons2k/.github/.github/workflows/compare.yml@main
+    with:
+      new: $(curl -s https://api.github.com/repos/jeessy2/ddns-go/releases/latest | jq -r .tag_name)
+
+  git:
+    needs: cmp
+    if: needs.cmp.outputs.changed == 'true'
+    uses: WaterLemons2k/.github/.github/workflows/git.yml@main
+    with:
+      run: |
+        sed -i "3c 版本：${{ needs.cmp.outputs.version }}" README.md #向 README.md 第三行写入版本号
+        for i in 1 2 3; do wget $(curl https://api.github.com/repos/jeessy2/ddns-go/releases/tags/${{ needs.cmp.outputs.version }} | jq -r '.assets[].browser_download_url' | grep linux_x86_64) && break || echo "Retry $i" && sleep 1; done # 失败时重试 3 次
+        tar -xvzf *.tar.gz ddns-go
+        rm *.tar.gz
+        echo "${{ needs.cmp.outputs.version }}" > VERSION
+      commit_message: "feat: bump ddns-go to ${{ needs.cmp.outputs.version }}"
+      
+  docker:
+    needs: [cmp, git]
+    if: needs.cmp.outputs.changed == 'true'
+    uses: WaterLemons2k/Docker/.github/workflows/docker.yml@main
+    with:
+      tags: |
+        waterlemons2k/ddns-go
+        waterlemons2k/ddns-go:${{ needs.cmp.outputs.version }}
+    secrets:
+      TOKEN: ${{ secrets.TOKEN }}
