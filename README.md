@@ -1,6 +1,6 @@
 # Docker-ddns-go
 [ddns-go](https://github.com/jeessy2/ddns-go) 的 Docker 镜像  
-版本：v5.3.3
+版本：v5.3.5
 # 使用
 - 挂载主机目录, 使用docker host模式。可把 `/opt/ddns-go` 替换为你主机任意目录, 配置文件为隐藏文件
 
