@@ -1,6 +1,6 @@
 # Docker-ddns-go
 [ddns-go](https://github.com/jeessy2/ddns-go) 的最小 Docker 镜像  
-版本：v5.7.0
+版本：v5.7.1
 
 ## 为什么？
 
