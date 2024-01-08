@@ -1,7 +1,16 @@
 # Docker-ddns-go
-[ddns-go](https://github.com/jeessy2/ddns-go) 的 Docker 镜像  
+[ddns-go](https://github.com/jeessy2/ddns-go) 的最小 Docker 镜像  
 版本：v5.7.0
-# 使用
+
+## 为什么？
+
+[官方镜像]((https://hub.docker.com/r/jeessy/ddns-go))基于 [alpine](https://hub.docker.com/_/alpine)，并且出于调试、通过命令获取 IP 等需求不会改变（详见 [jeessy2/ddns-go#340](https://github.com/jeessy2/ddns-go/pull/340)）。
+
+因此，创建了基于 [scratch](https://hub.docker.com/_/scratch) 的最小镜像，其中只包含 ddns-go、时区和证书。
+
+如果你需要最小的镜像体积且没有上述需求，可以尝试使用此镜像。
+
+## 使用
 - 挂载主机目录, 使用docker host模式。可把 `/opt/ddns-go` 替换为你主机任意目录, 配置文件为隐藏文件
 
   ```bash
