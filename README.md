@@ -4,7 +4,7 @@
 
 ## 为什么？
 
-[官方镜像]((https://hub.docker.com/r/jeessy/ddns-go))基于 [alpine](https://hub.docker.com/_/alpine)，并且出于调试、通过命令获取 IP 等需求不会改变（详见 [jeessy2/ddns-go#340](https://github.com/jeessy2/ddns-go/pull/340)）。
+[官方镜像](https://hub.docker.com/r/jeessy/ddns-go)基于 [alpine](https://hub.docker.com/_/alpine)，并且出于调试、通过命令获取 IP 等需求不会改变（详见 [jeessy2/ddns-go#340](https://github.com/jeessy2/ddns-go/pull/340)）。
 
 因此，创建了基于 [scratch](https://hub.docker.com/_/scratch) 的最小镜像，其中只包含 ddns-go、时区和证书。
 
