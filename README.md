@@ -1,31 +1,35 @@
 # Docker-ddns-go
-[ddns-go](https://github.com/jeessy2/ddns-go) 的最小 Docker 镜像  
-版本：v5.7.1
 
-## 为什么？
+Minimal Docker Image for [ddns-go](https://github.com/jeessy2/ddns-go).  
+Version: v5.7.1
 
-[官方镜像](https://hub.docker.com/r/jeessy/ddns-go)基于 [alpine](https://hub.docker.com/_/alpine)，并且出于调试、通过命令获取 IP 等需求不会改变（详见 [jeessy2/ddns-go#340](https://github.com/jeessy2/ddns-go/pull/340)）。
+English | [简体中文](https://github.com/WaterLemons2k/Docker-ddns-go/blob/main/README.zh-CN.md)
 
-因此，创建了基于 [scratch](https://hub.docker.com/_/scratch) 的最小镜像，其中只包含 ddns-go、时区和证书。
+## Why?
 
-如果你需要最小的镜像体积且没有上述需求，可以尝试使用此镜像。
+The [Official Image](https://hub.docker.com/r/jeessy/ddns-go) is based on [alpine](https://hub.docker.com/_/alpine) and will not be changed due to the requirements for debugging, getting IP by command, etc. (for more infomation, see [jeessy2/ddns-go#340](https://github.com/jeessy2/ddns-go/pull/340))
 
-## 使用
-- 挂载主机目录, 使用docker host模式。可把 `/opt/ddns-go` 替换为你主机任意目录, 配置文件为隐藏文件
+Therefore, a minimal image based on [scratch](https://hub.docker.com/_/scratch) has been created, containing only ddns-go, the timezone and certificates.
+
+If you need the minimum image size and don't have the above requirements, you can try this image.
+
+## Usage
+
+- Mount the host directory, use the docker host mode. You can replace `/opt/ddns-go` with any directory on your host, the configuration file is a hidden file
 
   ```bash
   docker run -d --name ddns-go --restart=always --net=host -v /opt/ddns-go:/root waterlemons2k/ddns-go
   ```
 
-- 在浏览器中打开`http://主机IP:9876`，修改你的配置，成功
+- Open `http://DOCKER_IP:9876` in the browser, modify your configuration
 
-- [可选] 支持启动带参数 `-l`监听地址 `-f`间隔时间(秒)
+- [Optional] Support startup with parameters `-l`listen address `-f`Sync frequency(seconds)
 
   ```bash
   docker run -d --name ddns-go --restart=always --net=host -v /opt/ddns-go:/root waterlemons2k/ddns-go -l :9877 -f 600
   ```
 
-- [可选] 不使用docker host模式
+- [Optional] Without using docker host mode
 
   ```bash
   docker run -d --name ddns-go --restart=always -p 9876:9876 -v /opt/ddns-go:/root waterlemons2k/ddns-go
