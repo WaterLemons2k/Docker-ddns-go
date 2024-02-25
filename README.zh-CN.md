@@ -15,7 +15,7 @@
 
 ## 使用
 
-- 挂载主机目录, 使用docker host模式。可把 `/opt/ddns-go` 替换为你主机任意目录, 配置文件为隐藏文件
+- 挂载主机目录, 使用 docker host 模式。可把 `/opt/ddns-go` 替换为你主机任意目录, 配置文件为隐藏文件
 
   ```bash
   docker run -d --name ddns-go --restart=always --net=host -v /opt/ddns-go:/root waterlemons2k/ddns-go
@@ -29,7 +29,7 @@
   docker run -d --name ddns-go --restart=always --net=host -v /opt/ddns-go:/root waterlemons2k/ddns-go -l :9877 -f 600
   ```
 
-- [可选] 不使用docker host模式
+- [可选] 不使用 docker host 模式
 
   ```bash
   docker run -d --name ddns-go --restart=always -p 9876:9876 -v /opt/ddns-go:/root waterlemons2k/ddns-go

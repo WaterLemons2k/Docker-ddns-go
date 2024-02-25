@@ -3,7 +3,7 @@ name: ddns-go
 on:
   push:
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: 0 0 * * 0
 
 jobs:
   cmp:
@@ -17,16 +17,14 @@ jobs:
     uses: WaterLemons2k/.github/.github/workflows/git.yml@main
     with:
       run: |
-        # 向 README.md 和 README.zh-CN.md 的第 4 行写入版本号
-        sed -i "4c Version: ${{ needs.cmp.outputs.version }}" README.md
-        sed -i "4c 版本：${{ needs.cmp.outputs.version }}" README.zh-CN.md
+        VERSION="${{ needs.cmp.outputs.version }}"
 
-        # https://unix.stackexchange.com/a/82610
-        for i in 1 2 3; do wget $(curl https://api.github.com/repos/jeessy2/ddns-go/releases/tags/${{ needs.cmp.outputs.version }} | jq -r '.assets[].browser_download_url' | grep linux_x86_64) && break || echo "Retry $i" && sleep 1; done # 失败时重试 3 次
-        tar -xvzf *.tar.gz ddns-go
-        rm *.tar.gz
-        echo "${{ needs.cmp.outputs.version }}" > VERSION
-      commit_message: 'feat: bump ddns-go to ${{ needs.cmp.outputs.version }}'
+        sed -i "4c Version: $VERSION" README.md
+        sed -i "4c 版本：$VERSION" README.zh-CN.md
+        echo "$VERSION" > VERSION
+
+        go run -C tools . $VERSION
+      commit_message: "feat: bump ddns-go to ${{ needs.cmp.outputs.version }}"
 
   docker:
     needs: [cmp, git]
