@@ -1,0 +1,17 @@
+#!/bin/sh
+set -e
+
+VERSION=$1
+
+if [ -z "$VERSION" ]; then
+  echo "Usage: bump <version>"
+  exit 1
+fi
+
+echo "bump $VERSION"
+
+sed -i "4c Version: v$VERSION" README.md
+sed -i "4c 版本：v$VERSION" README.zh-CN.md
+echo "v$VERSION" >VERSION
+
+go run -C tools . "$VERSION"

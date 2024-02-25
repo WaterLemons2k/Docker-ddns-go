@@ -16,14 +16,7 @@ jobs:
     if: needs.cmp.outputs.changed == 'true'
     uses: WaterLemons2k/.github/.github/workflows/git.yml@main
     with:
-      run: |
-        VERSION="${{ needs.cmp.outputs.version }}"
-
-        sed -i "4c Version: $VERSION" README.md
-        sed -i "4c 版本：$VERSION" README.zh-CN.md
-        echo "$VERSION" > VERSION
-
-        go run -C tools . $VERSION
+      run: ./tools/bump ${{ needs.cmp.outputs.version }}
       commit_message: "feat: bump ddns-go to ${{ needs.cmp.outputs.version }}"
 
   docker:

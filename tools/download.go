@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"os"
@@ -43,13 +42,18 @@ func main() {
 	}
 	version := os.Args[1]
 
-	url := fmt.Sprintf("https://api.github.com/repos/jeessy2/%s/releases/tags/v%s", repo, version)
+	url := fmt.Sprintf(
+		"https://api.github.com/repos/jeessy2/%s/releases/tags/v%s", repo, version,
+	)
 
-	body := getBody(url)
-	defer body.Close()
+	resp, err := client.Get(url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
 
 	var release Release
-	if err := json.Parse(body, &release); err != nil {
+	if err := json.Parse(resp.Body, &release); err != nil {
 		log.Fatal(err)
 	}
 
@@ -59,22 +63,16 @@ func main() {
 			continue
 		}
 
-		body := getBody(asset.URL)
-		defer body.Close()
+		resp, err := client.Get(asset.URL)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer resp.Body.Close()
+
 		fmt.Println(asset.Name, "downloaded. Extracting", repo, "from the tar.gz file...")
 
 		// Extracts the file with repo from the tar.gz file
-		untar.SpecificFile(body, repo)
+		untar.SpecificFile(resp.Body, repo)
 		break
 	}
-}
-
-// getBody gets the response body from the given url.
-func getBody(url string) io.ReadCloser {
-	resp, err := client.Get(url)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return resp.Body
 }
