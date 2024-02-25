@@ -1,12 +1,13 @@
 #!/bin/sh
 set -e
 
-VERSION=$1
-
-if [ -z "$VERSION" ]; then
+if [ -z "$1" ]; then
   echo "Usage: bump <version>"
   exit 1
 fi
+
+# Trim leading "v"
+VERSION=${1#v}
 
 echo "bump $VERSION"
 

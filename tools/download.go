@@ -40,7 +40,9 @@ func main() {
 		fmt.Println("Usage: go run -C tools . <version>")
 		return
 	}
-	version := os.Args[1]
+
+	// If there is a leading "v", remove it as we only need the version number.
+	version := strings.TrimPrefix(os.Args[1], "v")
 
 	url := fmt.Sprintf(
 		"https://api.github.com/repos/jeessy2/%s/releases/tags/v%s", repo, version,
