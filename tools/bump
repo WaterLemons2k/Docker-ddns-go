@@ -1,8 +1,10 @@
 #!/bin/sh
-set -e
+set -ex
+
+TOOLS_BIN="./tools/tools"
 
 if [ -z "$1" ]; then
-  echo "Usage: bump <version>"
+  echo "Usage: $0 <version>"
   exit 1
 fi
 
@@ -15,4 +17,7 @@ sed -i "4c Version: v$VERSION" README.md
 sed -i "4c 版本：v$VERSION" README.zh-CN.md
 echo "v$VERSION" >VERSION
 
-go run -C tools . "$VERSION"
+go build -C tools
+trap 'rm -f $TOOLS_BIN' EXIT
+
+"$TOOLS_BIN" "$VERSION"

@@ -7,7 +7,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"path/filepath"
 	"strings"
 )
 
@@ -36,8 +35,7 @@ func SpecificFile(src io.Reader, filename string) {
 			continue
 		}
 
-		// Write the extracted file to the parent directory of the executable
-		out, err := os.Create(filepath.Join("..", header.Name))
+		out, err := os.Create(header.Name)
 		if err != nil {
 			log.Fatal(err)
 		}

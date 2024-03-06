@@ -37,7 +37,7 @@ var client = &http.Client{Timeout: 10 * time.Second}
 
 func main() {
 	if len(os.Args) != 2 {
-		fmt.Println("Usage: go run -C tools . <version>")
+		fmt.Println("Usage:", os.Args[0], ". <version>")
 		return
 	}
 
@@ -53,6 +53,11 @@ func main() {
 		log.Fatal(err)
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		fmt.Println(resp.Status)
+		os.Exit(1)
+	}
 
 	var release Release
 	if err := json.Parse(resp.Body, &release); err != nil {
