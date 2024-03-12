@@ -35,7 +35,7 @@ func SpecificFile(src io.Reader, filename string) {
 			continue
 		}
 
-		out, err := os.Create(header.Name)
+		out, err := os.OpenFile(header.Name, os.O_WRONLY|os.O_CREATE, header.FileInfo().Mode())
 		if err != nil {
 			log.Fatal(err)
 		}
