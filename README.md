@@ -1,7 +1,7 @@
 # Docker-ddns-go
 
 Minimal Docker Image for [ddns-go](https://github.com/jeessy2/ddns-go).  
-Version: v6.9.2
+Version: v6.9.3
 
 English | [简体中文](https://github.com/WaterLemons2k/Docker-ddns-go/blob/main/README.zh-CN.md)
 
