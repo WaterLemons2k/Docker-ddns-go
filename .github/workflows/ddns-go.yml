@@ -11,6 +11,11 @@ jobs:
     with:
       new: $(curl -s https://api.github.com/repos/jeessy2/ddns-go/releases/latest | jq -r .tag_name)
 
+  keep-scheduled-workflow-activity:
+    needs: cmp
+    if: needs.cmp.outputs.changed == 'false'
+    uses: WaterLemons2k/scheduled-workflow-activity-action/.github/workflows/reusable.yml@v2
+
   git:
     needs: cmp
     if: needs.cmp.outputs.changed == 'true'
